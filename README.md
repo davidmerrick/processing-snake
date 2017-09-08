@@ -6,4 +6,4 @@ Implementation of snake game in [Processing](https://processing.org/).
 2. Run the code.
 3. Et Voila!
 
-## Screenshots
+![](img/snake.gif)
