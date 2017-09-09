@@ -32,6 +32,10 @@ public enum Direction {
    UP, DOWN, LEFT, RIGHT 
 }
 
+public enum GameState {
+   PLAYING, GAME_OVER, WIN 
+}
+
 public class Snake {
   
   private Deque<Point> pointDeque = new ArrayDeque<Point>();
@@ -93,6 +97,18 @@ public class Snake {
           pointList.add(point);
       }
       return pointList;
+  }
+  
+  public boolean hasEatenSelf(){
+    List<Point> points = getPoints(); 
+    Point head = getHead();
+    List<Point> duplicateHeadList = new ArrayList<Point>();
+    for(Point point : points){
+       if(point.equals(head)){
+          duplicateHeadList.add(point); 
+       }
+    }
+    return duplicateHeadList.size() > 1;
   }
 }
 
@@ -168,18 +184,14 @@ Grid grid = new Grid(GRID_WIDTH, GRID_HEIGHT, BLOCK_SIDE_LENGTH);
 Snake snake = new Snake();
 Point foodPoint = new Point(GRID_WIDTH/2, GRID_HEIGHT/2);
 final int GAME_SPEED = 5;
+GameState gameState = GameState.PLAYING;
 
 void setup(){
   size(600, 600);
 }
 
-void draw(){
-  // Todo: check if snake has eaten itself
-  if(!grid.isValidPoint(snake.getHead())){
-      throw new RuntimeException("Game over."); 
-   } 
-   
-   Point snakeHead = snake.getHead();
+void playGame(){
+  Point snakeHead = snake.getHead();
    if(snakeHead.equals(foodPoint)){
        snake.grow();
        foodPoint = grid.getRandomPoint(snake.getPoints());
@@ -196,6 +208,30 @@ void draw(){
    
    delay(500/GAME_SPEED);
    snake.move();
+}
+
+void draw(){
+  switch(gameState){
+     case PLAYING:
+      Point snakeHead = snake.getHead();
+      if(!grid.isValidPoint(snakeHead) || snake.hasEatenSelf()){
+          gameState = GameState.GAME_OVER;
+          break;
+       }
+       playGame();
+       break;
+    case GAME_OVER:
+      int middleX = grid.getXSize() / 2;
+      int middleY = grid.getYSize() / 2;
+      background(255);
+      
+      PFont f;
+      f = createFont("Arial", 16, true);
+      textFont(f, 36);
+      textAlign(CENTER);
+      text("GAME OVER", middleX, middleY);
+      break;
+  }
 }
 
 void keyPressed(){
