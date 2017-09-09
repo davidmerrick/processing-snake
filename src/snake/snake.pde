@@ -48,7 +48,31 @@ public class Snake {
   }
   
   public void changeDirection(Direction newDirection){
-      direction = newDirection;
+    // Make sure new direction is valid
+    switch(newDirection){
+        case UP:
+          if(direction == Direction.DOWN){
+             return;   
+          };
+          break;
+        case DOWN:
+          if(direction == Direction.UP){
+             return;   
+          };
+          break;
+        case LEFT:
+          if(direction == Direction.RIGHT){
+             return;   
+          };
+          break;
+        case RIGHT:
+          if(direction == Direction.LEFT){
+             return;   
+          };
+          break;
+    }
+    
+    direction = newDirection;
   }
   
   public void move(){
@@ -180,10 +204,14 @@ public class Grid {
 final int GRID_WIDTH = 30;
 final int GRID_HEIGHT = 30;
 final int BLOCK_SIDE_LENGTH = 20;
+final int WINNING_SCORE = 5;
+final int GAME_SPEED = 5;
+
 Grid grid = new Grid(GRID_WIDTH, GRID_HEIGHT, BLOCK_SIDE_LENGTH);
 Snake snake = new Snake();
 Point foodPoint = new Point(GRID_WIDTH/2, GRID_HEIGHT/2);
-final int GAME_SPEED = 5;
+int score = 0;
+
 GameState gameState = GameState.PLAYING;
 
 void setup(){
@@ -193,6 +221,7 @@ void setup(){
 void playGame(){
   Point snakeHead = snake.getHead();
    if(snakeHead.equals(foodPoint)){
+       score++;
        snake.grow();
        foodPoint = grid.getRandomPoint(snake.getPoints());
    }
@@ -217,21 +246,31 @@ void draw(){
       if(!grid.isValidPoint(snakeHead) || snake.hasEatenSelf()){
           gameState = GameState.GAME_OVER;
           break;
+       } else if(score == WINNING_SCORE){
+          gameState = GameState.WIN;
+          break; 
        }
        playGame();
        break;
     case GAME_OVER:
-      int middleX = grid.getXSize() / 2;
-      int middleY = grid.getYSize() / 2;
-      background(255);
-      
-      PFont f;
-      f = createFont("Arial", 16, true);
-      textFont(f, 36);
-      textAlign(CENTER);
-      text("GAME OVER", middleX, middleY);
+      writeMessage("GAME OVER");
+      break;
+    case WIN:
+      writeMessage("YOU WON!");
       break;
   }
+}
+
+void writeMessage(String message){
+  PFont f;
+  int middleX = grid.getXSize() / 2;
+  int middleY = grid.getYSize() / 2;
+  background(255);
+
+  f = createFont("Arial", 16, true);
+  textFont(f, 36);
+  textAlign(CENTER);
+  text(message, middleX, middleY);
 }
 
 void keyPressed(){
