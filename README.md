@@ -6,7 +6,7 @@ I mostly wrote this as an exercise in data structures, and partly to learn more 
 
 ## Usage
 
-1. In a Processing Java environment, open the ```src/snake.pde``` file.
+1. In a Processing Java environment, open the ```src/snake/snake.pde``` file.
 2. Run the code.
 3. Et Voila!
 
