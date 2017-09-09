@@ -204,7 +204,7 @@ public class Grid {
 final int GRID_WIDTH = 30;
 final int GRID_HEIGHT = 30;
 final int BLOCK_SIDE_LENGTH = 20;
-final int WINNING_SCORE = 5;
+final int WINNING_SCORE = 20;
 final int GAME_SPEED = 5;
 
 Grid grid = new Grid(GRID_WIDTH, GRID_HEIGHT, BLOCK_SIDE_LENGTH);
@@ -235,7 +235,8 @@ void playGame(){
      grid.drawPoint(point);
    };
    
-   delay(500/GAME_SPEED);
+   // Speed up the game as points accumulate
+   delay(500/GAME_SPEED - score * 3);
    snake.move();
 }
 
